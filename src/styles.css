@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+
+body,
+html {
+    height: 100%;
+}
+
+.mouse {
+    cursor: pointer;
+}
+
+.imageSize {
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 50%;
+    box-shadow: 3px 3px 1px #ccc;
+    -webkit-box-shadow: 3px 3px 1px #ccc;
+    -moz-box-shadow: 3px 3px 1px #ccc;
+}
+
+.bg {
+    background-image: url("./assets/image/bg.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

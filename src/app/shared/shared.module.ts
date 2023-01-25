@@ -1,6 +1,9 @@
 /*COMPONENTS*/
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { CarouselImageComponent } from './components/carousel-image/carousel-image.component';
+import { CarouselVideoComponent } from './components/carousel-video/carousel-video.component';
+import { CardMovieComponent } from './components/card-movie/card-movie.component';
+
 /*MODULES*/
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,13 +17,17 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { RatingModule } from 'primeng/rating';
 import { CardModule } from 'primeng/card';
-import { CarouselVideoComponent } from './components/carousel-video/carousel-video.component';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { TableComponent } from './components/table/table.component';
 
 @NgModule({
   declarations: [
     NavbarComponent,
     CarouselImageComponent,
     CarouselVideoComponent,
+    CardMovieComponent,
+    TableComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,13 +41,16 @@ import { CarouselVideoComponent } from './components/carousel-video/carousel-vid
     FormsModule,
     RatingModule,
     CardModule,
+    TableModule,
   ],
   exports: [
     NavbarComponent,
     CarouselImageComponent,
     CarouselVideoComponent,
-    BrowserModule,
+    CardMovieComponent,
     BrowserAnimationsModule,
+    TableComponent,
+    BrowserModule,
     MessageModule,
     TabMenuModule,
     CarouselModule,
@@ -50,6 +60,7 @@ import { CarouselVideoComponent } from './components/carousel-video/carousel-vid
     FormsModule,
     RatingModule,
     CardModule,
+    DialogModule,
   ],
   providers: [],
   bootstrap: [],

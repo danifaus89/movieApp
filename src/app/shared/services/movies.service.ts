@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import {
   RequestEndpointsMovies,
   RequestEndpointsDiscover,
@@ -58,6 +58,35 @@ export class MoviesService {
     return this.http.get(
       RequestEndpointsMovies.DETAIL +
         `/${id}/videos?api_key=${this.apiKey}&language=${this.lang}`
+    );
+  }
+  getRelatedMovies(id: number): Observable<any> {
+    return this.http.get(
+      RequestEndpointsMovies.RECOMMENDATION +
+        `/${id}/recommendations` +
+        `?api_key=${this.apiKey}&language=${this.lang}`
+    );
+  }
+  getCreditMovies(id: number): Observable<any> {
+    return this.http.get(
+      RequestEndpointsMovies.CREDITS +
+        `/${id}/credits` +
+        `?api_key=${this.apiKey}&language=${this.lang}`
+    );
+  }
+  getReviews(id: number): Observable<any> {
+    this.lang = 'en-US';
+    return this.http.get(
+      RequestEndpointsMovies.REVIEWS +
+        `/${id}/reviews` +
+        `?api_key=${this.apiKey}&language=${this.lang}`
+    );
+  }
+  getUpcoming(): Observable<any> {
+    this.lang = 'en-US';
+    return this.http.get(
+      RequestEndpointsMovies.UPCOMING +
+        `?api_key=${this.apiKey}&language=${this.lang}`
     );
   }
 }

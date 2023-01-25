@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import {
   MovieDetail,
   MovieGenre,
 } from 'src/app/shared/models/movies.interface';
+import { TableConfig } from 'src/app/shared/models/table.interface';
 import { MoviesService } from 'src/app/shared/services/movies.service';
 
 @Component({
@@ -16,7 +17,16 @@ export class MovieDetailComponent implements OnInit {
   public imgUrl: string = 'https://image.tmdb.org/t/p/original';
   public img: string;
   public movieDetail: MovieDetail[] = [];
+  public castTable: any[] = [];
   public movieTrailer: any[] = [];
+  public comments: any[] = [];
+  public recommandations: any[] = [];
+  public trailerLink: string;
+  public trailerExists: boolean;
+  public commentsExists: boolean;
+  public actorsExists: boolean;
+  public displayBasic: boolean;
+  public dataR: any[] = [];
   public genres: any[];
   public colors = [
     { name: 'primary' },
@@ -35,10 +45,13 @@ export class MovieDetailComponent implements OnInit {
 
   constructor(
     private service: MoviesService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.id = this.activatedRoute.snapshot.params['id'];
+
     this.responsiveOptions = [
       {
         breakpoint: '768px',
@@ -46,13 +59,21 @@ export class MovieDetailComponent implements OnInit {
         numScroll: 0,
       },
     ];
-    this.loadDetail();
+    this.initPage();
   }
 
+  initPage() {
+    this.loadDetail();
+    this.loadTrailers();
+    this.loadRecomendations();
+    this.getOfficialTrailer();
+    this.getCredits();
+    this.getComments();
+  }
+  initTable() {}
+
   loadDetail() {
-    this.id = this.activatedRoute.snapshot.params['id'];
     this.service.getMovieDetail(this.id).subscribe((detail) => {
-      console.log(detail);
       if (detail) {
         this.movieDetail.push({
           adult: detail.adult,
@@ -68,8 +89,8 @@ export class MovieDetailComponent implements OnInit {
           overview: detail.overview,
           popularity: detail.popularity,
           poster_path: this.imgUrl + detail.poster_path,
-          production_companies: detail.production_companies,
-          production_countries: detail.production_countries,
+          production_companies: detail.production_companies[0].name,
+          production_countries: detail.production_countries[0].iso_3166_1,
           release_date: detail.release_date,
           revenue: detail.revenue,
           runtime: detail.runtime,
@@ -81,6 +102,7 @@ export class MovieDetailComponent implements OnInit {
           vote_average: parseFloat(detail.vote_average).toFixed(1),
           vote_count: detail.vote_count,
         });
+        console.log(this.movieDetail);
         this.genres = detail.genres;
         this.genres.map((obj) => {
           obj.color =
@@ -89,9 +111,97 @@ export class MovieDetailComponent implements OnInit {
         });
       }
     });
+  }
+  loadTrailers() {
     this.service.getMovieTrailers(this.id).subscribe((data) => {
       this.movieTrailer = data.results;
-      console.log(this.movieTrailer);
     });
+  }
+  loadRecomendations() {
+    this.service.getRelatedMovies(this.id).subscribe((rec) => {
+      this.dataR = rec.results;
+      this.dataR.forEach((x, index) => {
+        if (index < 6) {
+          this.recommandations.push({
+            adult: x.adult,
+            backdrop_path: x.backdrop_path,
+            genres: x.genres,
+            id: x.id,
+            original_language: x.original_language,
+            original_title: x.original_title,
+            overview: x.overview,
+            poster_path: this.imgUrl + x.poster_path,
+            release_date: x.release_date,
+            title: x.title,
+            video: x.video,
+            vote_average: parseFloat(x.vote_average).toFixed(1),
+            vote_count: x.vote_count,
+          });
+        }
+      });
+    });
+  }
+  getOfficialTrailer() {
+    this.service.getMovieTrailers(this.id).subscribe((rec) => {
+      this.dataR = rec.results;
+      this.dataR.forEach((x) => {
+        if (x.name.includes('oficial') || x.name.includes('Oficial')) {
+          this.trailerExists = true;
+          this.trailerLink = x.key;
+        } else {
+          this.trailerExists = false;
+        }
+      });
+    });
+  }
+  getCredits() {
+    this.service.getCreditMovies(this.id).subscribe((data) => {
+      if (data.cast) {
+        this.actorsExists = true;
+        this.castTable = data.cast;
+      } else {
+        this.actorsExists = false;
+      }
+    });
+  }
+  getComments() {
+    this.service.getReviews(this.id).subscribe((data) => {
+      if (data.results.length > 0) {
+        this.commentsExists = true;
+        this.comments = data.results;
+        this.comments.forEach((x) => {
+          if (x.author_details.avatar_path.length >= 68) {
+            x.author_details.avatar_path =
+              x.author_details.avatar_path.substring(1);
+            x.author_details.avatar_path =
+              x.author_details.avatar_path.substring(1);
+          } else {
+            x.author_details.avatar_path =
+              'https://www.gravatar.com/avatar' + x.author_details.avatar_path;
+          }
+        });
+      } else {
+        this.commentsExists = false;
+      }
+    });
+  }
+
+  //PRIVATE//
+  goToSeeMore(item: any) {
+    //recarrega la mateixa pagina
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/movie-detail/', item.id]).then(() => {});
+    });
+  }
+  goToTrailer() {
+    if (this.trailerExists)
+      window.open('https://www.youtube.com/watch?v=' + this.trailerLink);
+  }
+  goToRelatedMovies() {
+    console.log('hola');
+  }
+
+  showCast() {
+    this.displayBasic = true;
   }
 }

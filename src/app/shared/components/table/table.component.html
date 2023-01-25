@@ -1,0 +1,24 @@
+<p-table [value]="elements" [tableStyle]="{'min-width': '45rem'}">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th pSortableColumn="character">Personaje
+                <p-sortIcon field="character"></p-sortIcon>
+            </th>
+            <th pSortableColumn="name">Artista
+                <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="popularity">Popularidad
+                <p-sortIcon field="popularity"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-element>
+        <tr>
+            <td>{{element.character}}</td>
+            <td>{{element.name}}</td>
+            <td>
+                <p-rating [ngModel]="element.popularity" [readonly]="true" [cancel]="false"></p-rating>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
