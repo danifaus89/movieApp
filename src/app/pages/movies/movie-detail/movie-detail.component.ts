@@ -70,7 +70,6 @@ export class MovieDetailComponent implements OnInit {
     this.getCredits();
     this.getComments();
   }
-  initTable() {}
 
   loadDetail() {
     this.service.getMovieDetail(this.id).subscribe((detail) => {
@@ -159,6 +158,9 @@ export class MovieDetailComponent implements OnInit {
       if (data.cast) {
         this.actorsExists = true;
         this.castTable = data.cast;
+        this.castTable.forEach((x) => {
+          x.profile_path = this.imgUrl + x.profile_path;
+        });
       } else {
         this.actorsExists = false;
       }
@@ -200,7 +202,6 @@ export class MovieDetailComponent implements OnInit {
   goToRelatedMovies() {
     console.log('hola');
   }
-
   showCast() {
     this.displayBasic = true;
   }

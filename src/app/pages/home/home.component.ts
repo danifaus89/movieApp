@@ -7,7 +7,16 @@ import { MoviesService } from 'src/app/shared/services/movies.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  items: any[] = [];
+  activeItem: any;
+
   constructor(private service: MoviesService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.items = [
+      { label: 'Movies', routerLink: 'movies' },
+      { label: 'Series', routerLink: 'series' },
+    ];
+    this.activeItem = this.items[0];
+  }
 }

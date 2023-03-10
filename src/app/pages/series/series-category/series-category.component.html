@@ -1,0 +1,17 @@
+<div class="container-fluid bgC">
+
+    <div class="container-fluid body mt-2">
+        <div class="row justify-content-center">
+            <div class="col-4 mt-4">
+                <h1 class="py-2 text-light text-center">{{this.catObjectSerie.category_name_trans}}</h1>
+            </div>
+        </div>
+        <div class="row justify-content-center mx-5">
+            <div class="col-3 p-0 my-2" *ngFor="let item of catObjectSerie.movies">
+                <div (click)="goToDetail( item )" class="card " style="width: 15rem;">
+                    <img class="card-img-top img-fluid  " src="{{item.poster_path}}" alt="Card image cap">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,4 +11,8 @@ export class TableComponent {
   constructor() {}
 
   ngOnInit(): void {}
+
+  searchArtist(element: any) {
+    window.open('https://es.wikipedia.org/wiki/' + element.original_name);
+  }
 }

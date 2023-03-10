@@ -1,11 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, finalize, map, of, tap } from 'rxjs';
+
 import {
   RequestEndpointsMovies,
   RequestEndpointsDiscover,
   RequestEndpointsGenre,
 } from '../config/api.constant';
+import {
+  CarteleraResponse,
+  Genre,
+  Movie,
+  MovieDetail,
+} from '../models/movies.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,37 +23,74 @@ export class MoviesService {
   public apiKey: string = '624913bea8c587eb0a34e5e63240a44d';
   public lang: string = 'es-ES';
   public page: number = 1;
+  public loading: boolean = false;
+
   constructor(private http: HttpClient) {}
 
   getMovieGenres(): Observable<any> {
-    return this.http.get(
+    return this.http.get<Genre>(
       RequestEndpointsGenre.DISCOVER +
         `?api_key=${this.apiKey}&language=${this.lang}`
     );
   }
-  getPopulars(): Observable<any> {
-    return this.http.get(
-      RequestEndpointsMovies.POPULAR +
-        `?api_key=${this.apiKey}&language=${this.lang}&page=${this.page}`
-    );
+  getUpcoming(): Observable<Movie[]> {
+    return this.http
+      .get<CarteleraResponse>(
+        RequestEndpointsMovies.UPCOMING +
+          `?api_key=${this.apiKey}&language=${this.lang}`
+      )
+      .pipe(
+        map((resp) => resp.results),
+        tap(() => {})
+      );
   }
-  getLatest(): Observable<any> {
-    return this.http.get(
-      RequestEndpointsMovies.LATEST +
-        `?api_key=${this.apiKey}&language=${this.lang}`
-    );
+  getPopulars(): Observable<Movie[]> {
+    return this.http
+      .get<CarteleraResponse>(
+        RequestEndpointsMovies.POPULAR +
+          `?api_key=${this.apiKey}&language=${this.lang}&page=${this.page}`
+      )
+      .pipe(
+        map((resp) => resp.results),
+        tap(() => {})
+      );
   }
-  getTopRated(): Observable<any> {
-    return this.http.get(
-      RequestEndpointsMovies.TOPRATED +
-        `?api_key=${this.apiKey}&language=${this.lang}&page=${this.page}`
-    );
+  getLatest(): Observable<MovieDetail> {
+    return this.http
+      .get(
+        RequestEndpointsMovies.LATEST +
+          `?api_key=${this.apiKey}&language=${this.lang}`
+      )
+      .pipe(map((resp) => resp));
+  }
+  getTopRated(): Observable<Movie[]> {
+    if (this.loading) {
+      return of([]);
+    }
+    this.loading = true;
+
+    return this.http
+      .get<CarteleraResponse>(
+        RequestEndpointsMovies.TOPRATED +
+          `?api_key=${this.apiKey}&language=${this.lang}&page=${this.page}`
+      )
+      .pipe(
+        map((resp) => resp.results),
+        tap(() => {
+          this.loading = false;
+        })
+      );
   }
   getHorrorMovies(horrorID: number): Observable<any> {
-    return this.http.get(
-      RequestEndpointsDiscover.DISCOVER +
-        `?api_key=${this.apiKey}&language=${this.lang}&sort_by=popularity.desc&include_adult=true&page=1&with_genres=${horrorID}&page=${this.page}`
-    );
+    return this.http
+      .get<CarteleraResponse>(
+        RequestEndpointsDiscover.DISCOVER +
+          `?api_key=${this.apiKey}&language=${this.lang}&sort_by=popularity.desc&include_adult=true&page=1&with_genres=${horrorID}&page=${this.page}`
+      )
+      .pipe(
+        map((resp) => resp.results),
+        tap(() => {})
+      );
   }
   getMovieDetail(id: number): Observable<any> {
     return this.http.get(
@@ -79,13 +123,6 @@ export class MoviesService {
     return this.http.get(
       RequestEndpointsMovies.REVIEWS +
         `/${id}/reviews` +
-        `?api_key=${this.apiKey}&language=${this.lang}`
-    );
-  }
-  getUpcoming(): Observable<any> {
-    this.lang = 'en-US';
-    return this.http.get(
-      RequestEndpointsMovies.UPCOMING +
         `?api_key=${this.apiKey}&language=${this.lang}`
     );
   }

@@ -1,0 +1,11 @@
+<p-carousel [value]="elements" styleClass="custom-carousel" [numVisible]="10" [numScroll]="1" [responsiveOptions]="responsiveOptions" [autoplayInterval]="interval">
+    <ng-template let-element pTemplate="item">
+        <div class="container-fluid p-1 rounded mt-2">
+            <div class="row">
+                <div class="col-md-12 p-2">
+                    <img [src]="element.poster_path" class="img-fluid shadow rounded" alt="Responsive image" style="width:'70%'" (click)="goToDetail(element)">
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-carousel>

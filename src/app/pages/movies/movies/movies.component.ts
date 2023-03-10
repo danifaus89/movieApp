@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from 'src/app/shared/models/components.interface';
 import { Movie, MovieGenre } from 'src/app/shared/models/movies.interface';
 import { MoviesService } from 'src/app/shared/services/movies.service';
+import { Router } from '@angular/router';
+import { CategoryObject } from 'src/app/shared/models/components.interface';
 
 @Component({
   selector: 'app-movies',
@@ -9,17 +10,24 @@ import { MoviesService } from 'src/app/shared/services/movies.service';
   styleUrls: ['./movies.component.css'],
 })
 export class MoviesComponent implements OnInit {
-  public carouselTitles: Title[];
+  public carouselObject: CategoryObject[];
   public actualMovies: Movie[];
   public topRatedMovies: Movie[];
   public horrorMovies: Movie[];
   public latestMovies: Movie[];
-  public movieGenre: MovieGenre[];
   public upcomingMovies: Movie[];
+  public movieGenre: MovieGenre[];
+  public dataR: any[] = [];
+
   public popularOptions: any;
   public imgUrl: string = 'https://image.tmdb.org/t/p/original';
+  public isLoading: boolean = true;
+  public loadingUpcoming: boolean = true;
+  public loadingActuals: boolean = true;
+  public loadingTop: boolean = true;
+  public loadingHorror: boolean = true;
 
-  constructor(private service: MoviesService) {}
+  constructor(private service: MoviesService, private router: Router) {}
 
   ngOnInit(): void {
     this.initConfig();
@@ -34,43 +42,53 @@ export class MoviesComponent implements OnInit {
         numScroll: 0,
       },
     ];
-    this.carouselTitles = [
+  }
+  initCarousels() {
+    this.getUpcoming();
+    this.getActuals();
+    this.getTopRated();
+    this.getMoviesByGenre();
+    this.carouselObject = [
       {
         id: 1,
-        name: 'Películas actuales',
+        category_name_trans: 'Películas actuales',
+        original_category_name: 'actuals',
+        movies: this.actualMovies,
       },
       {
         id: 2,
-        name: 'Mejor valoradas',
+        category_name_trans: 'Mejor valoradas',
+        original_category_name: 'topRated',
+        movies: this.topRatedMovies,
       },
       {
         id: 3,
-        name: 'Películas de terror',
+        category_name_trans: 'Películas de terror',
+        original_category_name: 'horror',
+        movies: this.horrorMovies,
       },
       {
         id: 4,
-        name: 'Próximamente',
+        category_name_trans: 'Próximamente',
+        original_category_name: 'upComing',
+        movies: this.upcomingMovies,
       },
     ];
   }
 
-  initCarousels() {
-    this.getActuals();
-    this.getTopRated();
-    this.getMoviesByGenre();
-    this.getUpcoming();
-  }
-
   getActuals() {
-    /*ACTUALES*/
     this.service.getPopulars().subscribe((movie) => {
       if (movie) {
-        this.actualMovies = movie.results;
+        this.actualMovies = movie;
         this.actualMovies.map((data) => {
           data.backdrop_path = this.imgUrl + data.backdrop_path;
           data.poster_path = this.imgUrl + data.poster_path;
           data.vote_average = data.vote_average;
         });
+        this.carouselObject[0].movies = this.actualMovies;
+        if (this.actualMovies.length == movie.length) {
+          this.loadingActuals = false;
+        }
       }
     });
   }
@@ -78,12 +96,17 @@ export class MoviesComponent implements OnInit {
     /*TOPRATED*/
     this.service.getTopRated().subscribe((movie) => {
       if (movie) {
-        this.topRatedMovies = movie.results;
+        this.topRatedMovies = movie;
         this.topRatedMovies.map((data) => {
           data.backdrop_path = this.imgUrl + data.backdrop_path;
           data.poster_path = this.imgUrl + data.poster_path;
           data.vote_average = data.vote_average;
         });
+        this.carouselObject[1].movies = this.topRatedMovies;
+
+        if (this.topRatedMovies.length == movie.length) {
+          this.loadingTop = false;
+        }
       }
     });
   }
@@ -95,25 +118,40 @@ export class MoviesComponent implements OnInit {
       let horrorID = this.movieGenre[10].id;
       this.service.getHorrorMovies(horrorID).subscribe((movie) => {
         if (movie) {
-          this.horrorMovies = movie.results;
+          this.horrorMovies = movie;
           this.horrorMovies.map((data) => {
             data.poster_path = this.imgUrl + data.poster_path;
           });
+          this.carouselObject[2].movies = this.horrorMovies;
+          if (this.horrorMovies.length == movie.length) {
+            this.loadingHorror = false;
+          }
         }
       });
     });
   }
   getUpcoming() {
-    /*UPCOMMING*/
     this.service.getUpcoming().subscribe((movie) => {
       if (movie) {
-        this.upcomingMovies = movie.results;
+        this.upcomingMovies = movie;
         this.upcomingMovies.map((data) => {
           data.backdrop_path = this.imgUrl + data.backdrop_path;
           data.poster_path = this.imgUrl + data.poster_path;
           data.vote_average = data.vote_average;
         });
+        this.carouselObject[3].movies = this.upcomingMovies;
+        if (this.upcomingMovies.length == movie.length) {
+          this.loadingUpcoming = false;
+        }
       }
+    });
+  }
+
+  //PRIVATE
+  goToSeeMore(item: any) {
+    //this.router.navigate(['movies/category/', item.original_category_name]);
+    this.router.navigate(['movies/category/', item.original_category_name], {
+      state: { data: item },
     });
   }
 }

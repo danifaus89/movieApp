@@ -1,27 +1,54 @@
-export class MovieGenre {
+export interface CarteleraResponse {
+  results: Movie[];
+  page: number;
+  total_results: number;
+  dates: Dates;
+  total_pages: number;
+}
+
+export interface Dates {
+  maximum: Date;
+  minimum: Date;
+}
+
+export interface MovieGenre {
   id: number;
   name: string;
   color: string;
 }
 
-export class Movie {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: genre_id_Array[];
+export interface Genre {
+  genres: GenreOfMovies[];
+}
+export interface GenreOfMovies {
   id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
+  name: string;
 }
 
-export class MovieDetail {
+export interface Movie {
+  popularity: number;
+  vote_count: number;
+  video: boolean;
+  poster_path: string;
+  id: number;
+  adult: boolean;
+  backdrop_path: string;
+  original_language: OriginalLanguage;
+  original_title: string;
+  genre_ids: number[];
+  title: string;
+  vote_average: any;
+  overview: string;
+  release_date: string;
+}
+
+export enum OriginalLanguage {
+  En = 'en',
+  Es = 'es',
+  Ko = 'ko',
+}
+
+export interface MovieDetail {
   adult?: boolean;
   backdrop_path?: string;
   belongs_to_collection?: belongs_to_collection[];

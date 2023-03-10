@@ -1,0 +1,209 @@
+<div class="container-fluid bg-dark">
+    <div class="p-3" *ngFor="let m of serieDetail;">
+        <div class="row no-gutters">
+            <!--IMAGEN-->
+            <div class="col-md-4">
+                <img [src]="m.poster_path" class="img-fluid shadow-lg rounded" style="width:'100%'" [alt]="">
+            </div>
+            <!--DETALLE-->
+            <div class="col-md-8 p-0 detBg">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="display-1 text-center text-white">{{m.name}}</h1>
+                            <h6 class="text-center text-secondary">{{m.tagline}}</h6>
+
+                        </div>
+                        <div class="col-2 ml-auto">
+                            <h1><span class="badge bg-success  shadow mt-4">{{m.vote_average+'' }}</span></h1>
+                        </div>
+                    </div>
+                    <div class="row mt-3 justify-content-start">
+                        <div class="col ">
+                            <h5 class="text-right"><span *ngFor="let g of genres;" class="badge bg-{{g.color}} shadow mx-1">{{g.name + '' }}</span></h5>
+                        </div>
+                    </div>
+                    <div class="row mt-3 justify-content-between">
+                        <!-- ORIGEN -->
+                        <div class="col-3">
+                            <h5 class="text-start text-white mx-3">País de Origen: {{m.origin_country}}</h5>
+                        </div>
+                        <!-- Nº TEMPORADAS -->
+                        <div class="col-3">
+                            <h5 class="text-start text-white mx-3">Nº temporadas: {{m.number_of_seasons}}</h5>
+                        </div>
+                        <!-- Nº CAPITULOS -->
+                        <div class="col-3">
+                            <h5 class="text-start text-white mx-3">Nº capítulos: {{m.number_of_episodes}}</h5>
+                        </div>
+                        <!-- ESTRENO -->
+                        <div class="col-3">
+                            <h5 class="text-start text-white mx-3">Estreno: {{m.first_air_date | date: 'dd/MM/yyyy'}}</h5>
+                        </div>
+                    </div>
+                    <!-- DESCRIPCION -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h6 class="mb-3 text-start text-white mx-3">{{m.overview}}</h6>
+                        </div>
+                    </div>
+                    <!-- ULTIMO Y PROXIMO CAPITULO -->
+                    <div class="container-fluid m-0 mt-3">
+                        <div class="row justify-content-start">
+                            <div class="col-6">
+                                <h5 class="text-start text-white mx-1">Último capítulo: </h5>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="text-start text-white mx-1">Próximo capítulo: </h5>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start">
+                            <div class="col-6">
+                                <h6 class="text-left text-secondary mt-1 mx-1">{{m.last_episode_to_air[0].episode_number}} - {{m.last_episode_to_air[0].name}} ({{m.last_episode_to_air[0].air_date | date: 'dd/MM/yyyy'}})</h6>
+                            </div>
+                            <div class="col-6" *ngIf="!serieEnded">
+                                <h6 class="text-left text-secondary mt-1 mx-1">{{m.next_episode_to_air[0].episode_number}} - {{m.next_episode_to_air[0].name}} ({{m.next_episode_to_air[0].air_date | date: 'dd/MM/yyyy'}})</h6>
+                            </div>
+                            <div class="col-6" *ngIf="serieEnded">
+                                <h6 class="text-left text-warning mt-1 mx-1">Serie finalizada</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PUEDES VERLO EN -->
+                    <div class="row justify-content-start mt-3">
+                        <div class="col-3">
+                            <h5 class="text-start text-white mx-3">Puedes verlo en: </h5>
+                        </div>
+                        <div class="col-1" *ngFor="let net of m.networks">
+                            <h6 class="text-left text-white mt-1">{{net.name}}</h6>
+                        </div>
+                    </div>
+                    <!--CONT ICONS-->
+                    <div class="row justify-content-center">
+                        <!--TRAIER-->
+                        <div class="col-2 mouse" *ngIf="trailerExists" (click)="goToTrailer()">
+                            <i class="pi pi-youtube text-warning" style="font-size: 3rem" pInputText pTooltip="Ver Tràiler" placeholder="Top"></i>
+                        </div>
+                        <div class="col-2 mouse" *ngIf="!trailerExists">
+                            <h5 class="text-danger mt-1">Tràiler no disponible</h5>
+                        </div>
+                        <!--REPARTO-->
+                        <div *ngIf="actorsExists" class="col-2 mouse" (click)="showCast()">
+                            <i class="pi pi-book text-danger" style="font-size: 3rem" pInputText pTooltip="Ver Reparto" placeholder="Top"></i>
+                        </div>
+                        <div *ngIf="!actorsExists" class="col-2 mouse">
+                            <h6 class="text-danger mt-1">Reparto no disponible</h6>
+                        </div>
+                    </div>
+                    <!-- TEMPORADAS -->
+                    <div class="container-fluid">
+                        <div class="row justify-content-between mt-3">
+                            <div class="col-4">
+                                <h4 class="text-white">Ver temporadas:</h4>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start px-5 mb-5">
+                            <div class="col-2 p-0 my-2" *ngFor="let t of m.seasons">
+                                <div *ngIf="t.episode_count != 0" class="card " style="width: 7rem;">
+                                    <img *ngIf="!t.poster_path.includes('originalnull')" class="card-img-top " src="{{t.poster_path}}" (click)="showSeason(t)">
+                                    <img *ngIf="t.poster_path.includes('originalnull')" class="imgNotFound" src="../assets/image/image-not-found.jpg" (click)="showSeason(t)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--RELACIONADAS-->
+<div *ngIf="recomendedExists" class="container-fluid mt-1 bg-dark">
+    <div *ngFor="let item of carouselObject" class="container-fluid body mt-2">
+        <div class="row justify-content-between">
+            <div class="col-4 mt-4">
+                <h3 class="py-2 text-light">{{item.category_name_trans}}</h3>
+            </div>
+            <div class="col-2 mt-5" (click)="seeMoreSeries(item)">
+                <a class="text-white mouse">Ver más<i class="pi pi-chevron-down"  style="font-size: 1rem"></i></a>
+            </div>
+            <app-casousel-serie [elements]="item.movies" [responsiveOptions]="popularOptions" [interval]="7000"></app-casousel-serie>
+        </div>
+    </div>
+</div>
+<!--COMMENTS-->
+<div *ngIf="commentsExists" class="container-fluid mt-1">
+    <div class="row">
+        <div class="col-10 my-4">
+            <h4 class="text-dark">Opiniones:</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" *ngFor="let item of comments">
+            <div class="card mt-1 mx-auto mb-3 shadow-lg" style="width: 90rem;">
+                <div class="card-body">
+                    <div class="d-flex bd-highlight">
+                        <div class="bd-highlight">
+                            <img class="imageSize" src="{{item.author_details.avatar_path}}" />
+                        </div>
+                        <div class="bd-highlight">
+                            <h5 class="card-title mt-3">{{item.author}}</h5>
+                        </div>
+                        <div *ngIf="item.author_details.rating != null" class="bd-highlight">
+                            <h3 *ngIf="item.author_details.rating > 7" class="text-right"><span class="badge bg-success shadow mx-5 mt-2">{{item.author_details.rating + '' }}</span></h3>
+                            <h3 *ngIf="item.author_details.rating <= 7 && item.author_details.rating >= 4" class="text-right"><span class="badge bg-warning shadow mx-5 mt-2">{{item.author_details.rating + '' }}</span></h3>
+                            <h3 *ngIf="item.author_details.rating < 3" class="text-right"><span class="badge bg-danger shadow mx-5 mt-2">{{item.author_details.rating + '' }}</span></h3>
+                        </div>
+                        <div class="ms-auto bd-highlight">
+                            <h6 class="card-subtitle ">{{item.updated_at | date: 'dd/MM/yyyy'}}</h6>
+                        </div>
+                    </div>
+                    <p class="card-text">{{item.content}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--TEMPORADAS DIALOG-->
+<p-dialog header="{{attributeData['name']}}" [(visible)]="displayBasic" [style]="{width: '55vw'}">
+    <div class="container-fluid bg-dark ">
+        <div class="row">
+            <div class="col-3 p-0">
+                <img *ngIf="hasImage" src="{{attributeData.src}}" class="imgSeasonCard" alt="img-fluid">
+                <img *ngIf="!hasImage" src="../assets/image/image-not-found.jpg" class="imgSeasonCard" alt="img-fluid">
+
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-10 pl-2">
+                        <h5 class="mt-2">Primera emisión:
+                            <span class="text-white">{{this.attributeData['air_date'] | date: 'dd/MM/yyyy'}}</span>
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-10 pl-2">
+                        <h5>Nº episodios: <span class="text-white">{{this.attributeData['episode_count']}}</span></h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 pl-2">
+                        <h5>Descripción: </h5>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-11">
+                        <h6 class="text-white">{{this.attributeData['overview']}}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+<!--REPARTO DIALOG-->
+<p-dialog header="Reparto" [(visible)]="displayCast" [style]="{width: '50vw'}">
+    <app-table [elements]="castTable"></app-table>
+</p-dialog>

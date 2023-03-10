@@ -1,6 +1,16 @@
 <div class="container-fluid bg">
-    <div class="row">
-        <div class="col-12">
+    <div class="row justify-content-lg-center mt-5">
+        <div *ngFor="let card of items" class="col-4">
+
+
+
+            <div class="card mt-5" style="width: 18rem;">
+                <a routerLink={{card.routerLink}}>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{card.label}}</h5>
+                    </div>
+                </a>
+            </div>
 
         </div>
     </div>

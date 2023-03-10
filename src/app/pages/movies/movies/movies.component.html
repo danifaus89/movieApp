@@ -1,19 +1,66 @@
-<div class="container-fluid body shadow-lg">
-    <h3 class="py-2 text-light">{{ this.carouselTitles[0].name }}</h3>
-    <app-carousel-image [elements]="actualMovies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
+<div class="container-fluid bgM">
+
+    <div *ngFor="let item of carouselObject" class="container-fluid body shadow-lg mt-2">
+        <div class="row justify-content-between">
+            <div class="col-4 mt-4">
+                <h3 class="py-2 text-light">{{item.category_name_trans}}</h3>
+            </div>
+            <div class="col-2 mt-5" (click)="goToSeeMore(item)">
+                <a class="text-white mouse">Ver más<i class="pi pi-chevron-down"  style="font-size: 1rem"></i></a>
+            </div>
+            <app-carousel-image [elements]="item.movies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
+        </div>
+    </div>
 </div>
 
-<div class="container-fluid body shadow-lg mt-2">
-    <h3 class="py-2 text-light">{{this.carouselTitles[3].name}}</h3>
-    <app-carousel-image [elements]="upcomingMovies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
-</div>
-
-<div class="container-fluid body shadow-lg mt-2">
-    <h3 class="py-2 text-light">{{this.carouselTitles[1].name}}</h3>
-    <app-carousel-image [elements]="topRatedMovies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
-</div>
-
-<div class="container-fluid body shadow-lg mt-2">
-    <h3 class="py-2 text-light">{{this.carouselTitles[2].name}}</h3>
-    <app-carousel-image [elements]="horrorMovies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
-</div>
+<!-- PROXIMAMENTE -->
+<!-- <div class="container-fluid body shadow-lg mt-2">
+        <div *ngIf="loadingUpcoming" class="row justify-content-center">
+            <h3 class="py-2 text-light">{{this.carouselTitles[3].name}}</h3>
+            <p-progressSpinner class="col-1" animationDuration=".5s"></p-progressSpinner>
+        </div>
+        <div *ngIf="!loadingUpcoming" class="row justify-content-between">
+            <div class="col-4 mt-4">
+                <h3 class="py-2 text-light">{{this.carouselTitles[3].name}}</h3>
+            </div>
+            <div class="col-2 mt-5" (click)="goToSeeMore(this.carouselTitles[3].id)">
+                <a class="text-white mouse">Ver más
+                <i class="pi pi-chevron-down"  style="font-size: 1rem"></i>
+              </a>
+            </div>
+            <app-carousel-image [elements]="upcomingMovies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
+        </div>
+    </div> -->
+<!-- ACTUALES -->
+<!--<div class="container-fluid body shadow-lg">
+        <div *ngIf="loadingActuals" class="row justify-content-center">
+            <h3 class="py-2 text-light">{{this.carouselTitles[0].name}}</h3>
+            <p-progressSpinner class="col-1" animationDuration=".5s"></p-progressSpinner>
+        </div>
+        <div *ngIf="!loadingActuals" class="">
+            <h3 class="py-2 text-light">{{ this.carouselTitles[0].name }}</h3>
+            <app-carousel-image [elements]="actualMovies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
+        </div>
+    </div>-->
+<!-- TOPRATED -->
+<!-- <div class="container-fluid body shadow-lg mt-2">
+        <div *ngIf="loadingTop" class="row justify-content-center">
+            <h3 class="py-2 text-light">{{this.carouselTitles[1].name}}</h3>
+            <p-progressSpinner class="col-1" animationDuration=".5s"></p-progressSpinner>
+        </div>
+        <div *ngIf="!loadingTop" class="">
+            <h3 class="py-2 text-light">{{this.carouselTitles[1].name}}</h3>
+            <app-carousel-image [elements]="topRatedMovies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
+        </div>
+    </div>-->
+<!-- HORROR -->
+<!-- <div class="container-fluid body shadow-lg mt-2">
+        <div *ngIf="loadingHorror" class="row justify-content-center">
+            <h3 class="py-2 text-light">{{this.carouselTitles[2].name}}</h3>
+            <p-progressSpinner class="col-1" animationDuration=".5s"></p-progressSpinner>
+        </div>
+        <div *ngIf="!loadingHorror" class="">
+            <h3 class="py-2 text-light">{{this.carouselTitles[2].name}}</h3>
+            <app-carousel-image [elements]="horrorMovies" [responsiveOptions]="popularOptions" [interval]="4500"></app-carousel-image>
+        </div>
+    </div> -->

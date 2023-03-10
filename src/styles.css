@@ -18,9 +18,58 @@ html {
     -moz-box-shadow: 3px 3px 1px #ccc;
 }
 
+.imgSeasonCard {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.imgNotFound {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.p-dialog .p-dialog-content {
+    padding: 0 !important;
+    -webkit-box-shadow: 0px 26px 12px 14px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 26px 12px 14px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 26px 12px 14px rgba(0, 0, 0, 0.75);
+}
+
 .bg {
     background-image: url("./assets/image/bg.jpg");
     height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bgM {
+    background-image: url("./assets/image/bg_movies.jpg");
+    height: auto;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bgC {
+    background-image: url("./assets/image/bg_cat.jpg");
+    height: auto;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bgS {
+    background-image: url("./assets/image/bg_series.jpeg");
+    height: auto;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.detBg {
+    background-image: url("./assets/image/detail_bg.jpg");
+    height: auto;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

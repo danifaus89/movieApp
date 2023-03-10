@@ -3,6 +3,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { CarouselImageComponent } from './components/carousel-image/carousel-image.component';
 import { CarouselVideoComponent } from './components/carousel-video/carousel-video.component';
 import { CardMovieComponent } from './components/card-movie/card-movie.component';
+import { TableComponent } from './components/table/table.component';
+import { CasouselSerieComponent } from './components/casousel-serie/casousel-serie.component';
 
 /*MODULES*/
 import { NgModule } from '@angular/core';
@@ -19,7 +21,7 @@ import { RatingModule } from 'primeng/rating';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
-import { TableComponent } from './components/table/table.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { TableComponent } from './components/table/table.component';
     CarouselVideoComponent,
     CardMovieComponent,
     TableComponent,
+    CasouselSerieComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,8 @@ import { TableComponent } from './components/table/table.component';
     RatingModule,
     CardModule,
     TableModule,
+    ProgressSpinnerModule,
+    DialogModule,
   ],
   exports: [
     NavbarComponent,
@@ -61,6 +66,8 @@ import { TableComponent } from './components/table/table.component';
     RatingModule,
     CardModule,
     DialogModule,
+    ProgressSpinnerModule,
+    CasouselSerieComponent,
   ],
   providers: [],
   bootstrap: [],

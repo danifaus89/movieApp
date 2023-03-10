@@ -7,17 +7,24 @@
             <th pSortableColumn="name">Artista
                 <p-sortIcon field="name"></p-sortIcon>
             </th>
+            <th></th>
             <th pSortableColumn="popularity">Popularidad
                 <p-sortIcon field="popularity"></p-sortIcon>
             </th>
+            <th></th>
+
+
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-element>
         <tr>
             <td>{{element.character}}</td>
             <td>{{element.name}}</td>
+            <td><img src="{{element.profile_path}}" [alt]="element.profile_path" width="50" class="p-0" /></td>
             <td>
                 <p-rating [ngModel]="element.popularity" [readonly]="true" [cancel]="false"></p-rating>
+            </td>
+            <td class=""><i class="pi pi-search mouse" style="font-size: 1rem" (click)="searchArtist(element)"></i>
             </td>
         </tr>
     </ng-template>
